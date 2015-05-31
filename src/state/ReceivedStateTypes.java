@@ -2,7 +2,8 @@ package state;
 
 public enum ReceivedStateTypes{
 
-	StatePrint("StatePrint");
+	StatePrint("StatePrint"),
+	RegularState("RegularState");
 
 	private final String stateVal;       
 
