@@ -3,6 +3,7 @@ package state;
 public enum ReceivedStateTypes{
 
 	StatePrint("StatePrint"),
+	StatePrintLastEvent("StatePrintLastEvent"),
 	RegularState("RegularState");
 
 	private final String stateVal;       

@@ -8,7 +8,7 @@ import events.eventTypes;
 public class PrintSate extends ReceivedSates {
 	
 	
-	private String message;
+	protected String message;
 	
 	public PrintSate (ReceivedStateTypes type, String stateID, HashMap<String, String> map, String message) {
 		super(type,stateID,map,true);
