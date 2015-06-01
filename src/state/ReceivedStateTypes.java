@@ -15,7 +15,6 @@ public enum ReceivedStateTypes{
 		stateVal=null; 
 	}
 
-
 /**
  * toString method.
  * 

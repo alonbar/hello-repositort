@@ -57,13 +57,14 @@ public class StateFileParser {
 				for(int childIndex = 0; childIndex < childNodes.getLength(); childIndex++) {
 					Node child = childNodes.item(childIndex);
 					if (child.getNodeType() == Node.ELEMENT_NODE) {
-						stateMap.put(childNodes.item(childIndex).getAttributes().getNamedItem("eventType").toString(),
-									 childNodes.item(childIndex).getAttributes().getNamedItem("nextState").toString());
-						}
+						String key = childNodes.item(childIndex).getAttributes().getNamedItem("eventType").getNodeValue();
+						String val = childNodes.item(childIndex).getAttributes().getNamedItem("nextState").getNodeValue();
+						stateMap.put(key, val);
+					}
 				}
-				System.out.println(eElement.getAttribute("stateID") + ", " + eElement.getAttribute("isAccepting"));
 				ReceivedSates current = null;
 				if (eElement.getAttribute("isAccepting").equals("true")) {
+					String type = eElement.getAttribute("type");
 					current = StateReceiveFactory.factory(eElement.getAttribute("type"), eElement.getAttribute("stateID"),stateMap, eElement.getAttribute("action"));
 					transitions.put(eElement.getAttribute("stateID"), current);
 				}

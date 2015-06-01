@@ -1,12 +1,6 @@
 package state;
 
-public class StateWait extends State {
+public class StateWait {
 
-	
-	@Override
-	public void action() {
-		
-		
-	}
 
 }

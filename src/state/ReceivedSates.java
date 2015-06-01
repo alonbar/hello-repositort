@@ -33,7 +33,6 @@ public class ReceivedSates extends State {
 	public String getStateID(){
 		return this.stateID;
 	}
-	public void processEvent(Event currentEvent){}
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
@@ -58,5 +57,17 @@ public class ReceivedSates extends State {
 	    else {
 	    	return false;
 	    }
+	}
+	@Override
+	public State processEvent(Event currentEvent, HashMap<String, ReceivedSates> transitions) {
+		String str = currentEvent.getEventType().toString();
+		String nextState = transitionLocalMap.get(str);
+		ReceivedSates retState = transitions.get(nextState);
+		if (retState.isAcceptingState == true) {
+			retState.action();
+			retState = transitions.get("q0");
+		}
+		System.out.println("moving to state: " + retState.getStateID());
+		return retState;
 	}       
 }

@@ -22,10 +22,5 @@ public class PrintSate extends ReceivedSates {
 	public void action() {
 		System.out.println(this.message);
 	}
-	@Override
-	public void processEvent(Event currentEvent) {
-//		this.eventsBuffer.add(currentEvent);
-		// TODO Auto-generated method stub
-	}
 
 }
