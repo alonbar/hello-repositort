@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,8 +20,7 @@ import state.ReceivedStateTypes;
 
 public class StateFileParser {
 	
-	public static HashMap<String, ReceivedSates> parse (String propertiesPath)
-	{
+	public static HashMap<String, ReceivedSates> parse (String propertiesPath) {
 		HashMap<String, ReceivedSates> transitions = null;
 		ArrayList<ReceivedSates> acceptingStates = null;
 		 try {
@@ -29,19 +29,14 @@ public class StateFileParser {
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 				Document doc = dBuilder.parse(fXmlFile);
-				
-				NodeList acceptingStatesToProcess = doc.getElementsByTagName("acceptingStates");
-				
 				NodeList transitionsToProcess = doc.getElementsByTagName("state");
-				NodeList transitionsToProcess2 =  doc.getElementsByTagName("state");
-				int j = transitionsToProcess2.getLength();
 				transitions = new HashMap<String, ReceivedSates>();
-				acceptingStates = parseAcceptingStates(acceptingStatesToProcess);
 				parseTransitions(transitionsToProcess, transitions, acceptingStates);
 				
 		 } catch (Exception e) {
 				e.printStackTrace();
 			    }
+		 transitions.get("q1").action();
 		return transitions;
 	}
 
@@ -58,58 +53,28 @@ public class StateFileParser {
 				NodeList childNodes = eElement.getChildNodes();
 				int leng = childNodes.getLength();
 				int counter = 0;
-				String [] stateMap = new String[eventTypes.length];
+				HashMap<String, String> stateMap = new HashMap<String, String>();
 				for(int childIndex = 0; childIndex < childNodes.getLength(); childIndex++) {
 					Node child = childNodes.item(childIndex);
 					if (child.getNodeType() == Node.ELEMENT_NODE) {
-						stateMap[counter] = childNodes.item(childIndex).getAttributes().getNamedItem("nextState").toString();
-					}
+						stateMap.put(childNodes.item(childIndex).getAttributes().getNamedItem("eventType").toString(),
+									 childNodes.item(childIndex).getAttributes().getNamedItem("nextState").toString());
+						}
 				}
-				ReceivedSates acceptionStateCandidate = null;
-				acceptionStateCandidate= isAcceptingState(acceptingStates, currentStateID);
-				if (acceptionStateCandidate != null) {
-					transitions.add(acceptionStateCandidate);
+				System.out.println(eElement.getAttribute("stateID") + ", " + eElement.getAttribute("isAccepting"));
+				ReceivedSates current = null;
+				if (eElement.getAttribute("isAccepting").equals("true")) {
+					current = StateReceiveFactory.factory(eElement.getAttribute("type"), eElement.getAttribute("stateID"),stateMap, eElement.getAttribute("action"));
+					transitions.put(eElement.getAttribute("stateID"), current);
 				}
 				else {
-					
-					transitions.add(new ReceivedSates(ReceivedStateTypes.RegularState, childNodes.item(childIndex).getAttributes().getNamedItem("stateID").toString()));
+					current = new ReceivedSates(ReceivedStateTypes.RegularState, eElement.getAttribute("stateID"),stateMap);
+					transitions.put(eElement.getAttribute("stateID"), new ReceivedSates(current));
 				}
 				counter++;
 
 			}
-		}		
-	}
-	
-	private static ReceivedSates isAcceptingState(ArrayList<ReceivedSates> acceptingStates, 
-												  String stateID) {
-		for (ReceivedSates temp : acceptingStates) {
-			if (temp.getStateID().equals(stateID)){
-				return temp;
-			}
 		}
-		return null;
-	}
-	
-	private static ArrayList<ReceivedSates> parseAcceptingStates(NodeList acceptingStates) {
-		ArrayList<ReceivedSates> statesList = new ArrayList<ReceivedSates>();  
-		int j = acceptingStates.getLength();
-		for (int i = 0; i < acceptingStates.getLength(); i++) {
-			Node nNode = acceptingStates.item(i); 
-			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
- 				Element eElement = (Element) nNode;
-				NodeList childNodes = eElement.getChildNodes();
-				for(int childIndex = 0; childIndex < childNodes.getLength(); childIndex++) {
-					Node child = childNodes.item(childIndex);
-					//Upon new types of states you may add here the conditions
-					if (child.getNodeType() == Node.ELEMENT_NODE) {
-						System.out.println(child.getNodeName());
-						statesList.add(StateReceiveFactory.factory(child.getNodeName(), 
-													child.getAttributes().getNamedItem("stateID").toString(), 
-													child.getAttributes().getNamedItem("action").toString()));		
-					}			 
-				}
-			}
-		}
-		return statesList;
+		
 	}
 }

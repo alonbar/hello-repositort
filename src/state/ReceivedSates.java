@@ -2,27 +2,33 @@ package state;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import events.Event;
 import events.eventTypes;
 
 public class ReceivedSates extends State {
-	private ReceivedStateTypes type;
-	protected File stateFileLog;
+	protected ReceivedStateTypes type;
 	protected String stateID;
-	protected String [] transitionLocalMap;
+	protected HashMap<String, String>  transitionLocalMap;
+	protected boolean isAcceptingState;
 	public ReceivedSates(ReceivedSates other) {
 		this(other.type,other.stateID, other.transitionLocalMap);
 	}
-	public ReceivedSates(ReceivedStateTypes type, String stateID, String [] map) {
+	public ReceivedSates(ReceivedStateTypes type, String stateID, HashMap<String, String> map) {
 		this(type,stateID);
-		for (int i = 0; i < eventTypes.length; i++) {
-			transitionLocalMap[i] = map[i];
-		}
+		transitionLocalMap = new HashMap<>();
+		transitionLocalMap.putAll(map);
 	}
 	public ReceivedSates(ReceivedStateTypes type, String stateID) {
 		this.stateID = stateID;
 		this.type = type;
+		this.isAcceptingState = false;
+	}
+	
+	public ReceivedSates(ReceivedStateTypes type, String stateID, HashMap<String, String> map, boolean isAccepting) {
+		this(type,stateID,map);
+		this.isAcceptingState = isAccepting;
 	}
 	public String getStateID(){
 		return this.stateID;
