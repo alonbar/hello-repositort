@@ -23,7 +23,9 @@ Example:  ./word-count -b -sort SelectionSort -suf < textfile
 Design Decisions & Issues
 -------------------------
 This is an implementation to a final state machine framework.
-This program receives as an input a XML that describes the states and rules of the machine.
+This program receives two parameters:
+	1. path to backup file (does not have to exist).
+	2. path to XML that describes the states and rules of the machine.
 The structure of the XML is as follows:
 
 <stateMachineProperties>
@@ -47,6 +49,7 @@ here is another example of another state that may be defined, but this one is di
 		</state> 
 
 The FSM is implemented in JAVA.
+The entry point is via machine/FSM.java.
 At any given time the machine holds a current state.
 Upon execution the machine will parse the XML to a map called transitions. the transitions will hold the states defined in the XML, while each state knows it's own rules.
 Thus, when a new event arrives the machine will process the event by letting the current state decide what should be the next state according to the event.

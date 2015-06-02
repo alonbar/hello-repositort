@@ -144,11 +144,11 @@ public class FSM {
 	public static void main (String [] args) {
 		if (args.length < 1)
 		{
-			System.out.println("missing state transition rules file");
+			System.out.println("usage: exectionFile backup stateTransitionRules");
 			return;
 		}
 		FSM machine = new FSM();
-		machine.init(BACKUP_FILE, args[0]);
+		machine.init(args[0], args[1]);
 		machine.waiting();
 	}
 }
