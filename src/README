@@ -1,0 +1,59 @@
+----------------------
+Command Line Arguments
+----------------------
+
+Example:  ./word-count -b -sort SelectionSort -suf < textfile
+
+-b | -a | -s
+  (required) Specifies the type of tree for storing (word, count) pair
+  possible trees are Binary search tree, Avl tree, and Splay tree
+
+    -b - Count frequencies using an unbalanced binary search tree 
+    -a - Count frequencies using an AVL tree 
+    -s - Count frequencies using a splay tree 
+
+-sort SelectionSort | MergeSort | HeapSort
+  (optional) Specifies the type of sort.  
+  If -sort is omitted, HeapSort is used
+
+-suf
+  (optional) Turns on suffix checker
+
+-------------------------
+Design Decisions & Issues
+-------------------------
+This is an implementation to a final state machine framework.
+This program receives as an input a XML that describes the states and rules of the machine.
+The structure of the XML is as follows:
+
+<stateMachineProperties>
+	<transitions>
+		<state stateID="q0" isAccepting="false">
+		<!-- the transitions rules of the state -->
+			<event eventType="A" nextState="q1"/> 
+			<event eventType="B" nextState="q0"/>
+			<event eventType="C" nextState="q0"/>
+		</state>
+	</transitions>
+</stateMachineProperties>
+
+Under transitions the program will look for more and different rules that describes a nature of the machine.
+here is another example of another state that may be defined, but this one is different with a different behaviour;
+
+		<state stateID="q5"  isAccepting="true" action="Seq3" type="StatePrintLastXEvents" waitForXevents="2">
+					<event eventType="A" nextState="q0"/>
+					<event eventType="B" nextState="q0"/>
+					<event eventType="C" nextState="q1"/>
+		</state> 
+
+The FSM is implemented in JAVA.
+At any given time the machine holds a current state.
+Upon execution the machine will parse the XML to a map called transitions. the transitions will hold the states defined in the XML, while each state knows it's own rules.
+Thus, when a new event arrives the machine will process the event by letting the current state decide what should be the next state according to the event.
+All state inherit from one abstract class called State.
+There is a class called Received state that represent all states that are defined in the aforementioned XML/
+In light of the given test examples I've defined two states: StatePrint and StatePrintLastXEvents (the second inherits from the first). The states are in charge of implementing 
+the logic described. There is no difference in the interaction of the machine with these states and any other state for that matter.
+In order to make the machine persistent, that machine manages a small backup file in a relative path to it's location. It is the responsibility of each state to "know" how to 
+backup itself into a property file and how to update itself from a proerty file. In that way, we can really benefit from a good state design, a design that take into consideration
+inheritance and etc. 

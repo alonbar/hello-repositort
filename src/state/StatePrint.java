@@ -14,16 +14,16 @@ import events.eventTypes;
  * @author ALONBA
  *
  */
-public class PrintSate extends ReceivedSates {
+public class StatePrint extends ReceivedSates {
 		
 	protected String message;
 	
-	public PrintSate (ReceivedStateTypes type, String stateID, HashMap<String, String> map, String message, boolean isAcceptingState) {
+	public StatePrint (ReceivedStateTypes type, String stateID, HashMap<String, String> map, String message, boolean isAcceptingState) {
 		super(type,stateID,map,isAcceptingState);
 		this.message = message;
 	}
 	
-	public PrintSate (PrintSate other) {
+	public StatePrint (StatePrint other) {
 		this(other.type,other.stateID, other.transitionLocalMap,other.message, other.isAcceptingState);
 		}
 	@Override

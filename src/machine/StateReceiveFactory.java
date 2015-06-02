@@ -4,7 +4,7 @@ import java.util.HashMap;
 import org.w3c.dom.NamedNodeMap;
 import state.ReceivedStateTypes;
 import state.ReceivedSates;
-import state.PrintSate;
+import state.StatePrint;
 import state.StateAtrributes;
 import state.StatePrintLastXEvent;
 
@@ -34,7 +34,7 @@ public class StateReceiveFactory {
 
 		//going over all the defined states to find the correct state to create.
 		if (ReceivedStateTypes.StatePrint.compareString(stateType)) { 
-			return new PrintSate(ReceivedStateTypes.StatePrint,
+			return new StatePrint(ReceivedStateTypes.StatePrint,
 								 stateAttributes.getNamedItem(StateAtrributes.stateID.toString()).getNodeValue(),
 								 map,
 								 stateAttributes.getNamedItem(StateAtrributes.action.toString()).getNodeValue(),

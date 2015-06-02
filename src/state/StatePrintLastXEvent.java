@@ -12,7 +12,7 @@ import events.Event;
  * @author ALONBA
  *
  */
-public class StatePrintLastXEvent extends PrintSate {
+public class StatePrintLastXEvent extends StatePrint {
 	static String EVENTS_BUFFER = "eventsBuffer";
 	static String WAIT_COUNTER = "waitCounter";
 	static String MOVE_ON_FLAG = "moveOnFlag";

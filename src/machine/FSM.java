@@ -20,8 +20,9 @@ import state.State;
 import state.ReceivedSates;
 import state.StateAtrributes;
 
-public class Machine {
+public class FSM {
 	private static String BEGIN_STATE = "q0";
+	private static String BACKUP_FILE = "src/resources/fsm_status2.properties";
 	private State currentState;
 	private boolean isOn;
 	//The machineBackup file is where the current state is stored so that if the machine goes down 
@@ -141,12 +142,14 @@ public class Machine {
 	
 	
 	public static void main (String [] args) {
-		
-		Machine m = new Machine();
-
-		m.init("src/resources/fsm_status2.properties", "src/resources/states.xml");
-		m.waiting();
-//		m.updateBackupFile(properties);
+		if (args.length < 1)
+		{
+			System.out.println("missing state transition rules file");
+			return;
+		}
+		FSM machine = new FSM();
+		machine.init(BACKUP_FILE, args[0]);
+		machine.waiting();
 	}
 }
 
