@@ -5,6 +5,13 @@ import java.util.Properties;
 
 import events.Event;
 
+/**
+ * This state is an example of how you can expand the machine different functionalities without 
+ * changing the fsm logic. This state will wait for x events until it will move to the next state.
+ * If it is an accepting state it will also print the events that were aggregated in that time.
+ * @author ALONBA
+ *
+ */
 public class StatePrintLastXEvent extends PrintSate {
 	static String EVENTS_BUFFER = "eventsBuffer";
 	static String WAIT_COUNTER = "waitCounter";
@@ -37,8 +44,11 @@ public class StatePrintLastXEvent extends PrintSate {
 	public void action() {
 		System.out.println(this.message + " " + eventBuffer);
 	}
+	
 	@Override
 	public State processEvent(Event currentEvent, HashMap<String, ReceivedSates> transitions) {
+		//If the state was defined to wait then this is where you implement the logic of the 
+		//processing of the event.
 		if (waitCounter > 0 && this.moveOnFlag == false )
 		{
 			this.waitCounter--;
@@ -75,8 +85,16 @@ public class StatePrintLastXEvent extends PrintSate {
 		properties.setProperty(StateAtrributes.waitForXevents.toString(), waitForXEventsStr);
 		properties.setProperty(EVENTS_BUFFER, this.eventBuffer);
 		properties.setProperty(WAIT_COUNTER, waitCounterStr);
-		properties.setProperty(MOVE_ON_FLAG, getBooleanInString(this.moveOnFlag));
+		properties.setProperty(MOVE_ON_FLAG, getStringFromBoolean(this.moveOnFlag));
 		super.backupState(properties);
 	}
-
+	
+	@Override
+	public void updateState(Properties properties) {
+		this.waitForXEvents =  Integer.parseInt(properties.getProperty(StateAtrributes.waitForXevents.toString()));
+		this.eventBuffer = properties.getProperty(EVENTS_BUFFER);
+		this.waitCounter = Integer.parseInt(properties.getProperty(WAIT_COUNTER));
+		this.moveOnFlag = getBooleanFromString(properties.getProperty(MOVE_ON_FLAG));
+		super.updateState(properties);
+	}
 }

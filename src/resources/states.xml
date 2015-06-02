@@ -21,7 +21,7 @@
 			<event eventType="B" nextState="q0"/>
 			<event eventType="C" nextState="q0"/>
 		</state>
-		<state stateID="q5"  isAccepting="true" action="Seq3" type="StatePrintLastXEvents" waitForXevents="1">
+		<state stateID="q5"  isAccepting="true" action="Seq3" type="StatePrintLastXEvents" waitForXevents="2">
 			<event eventType="A" nextState="q0"/>
 			<event eventType="B" nextState="q0"/>
 			<event eventType="C" nextState="q1"/>

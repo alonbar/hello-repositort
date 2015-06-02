@@ -1,5 +1,11 @@
 package state;
 
+/**
+ * When a new type of state is defined, it should be declared in this file so that the parser will
+ * be able to recognize it.
+ * @author ALONBA
+ *
+ */
 public enum ReceivedStateTypes{
 
 	StatePrint("StatePrint"),

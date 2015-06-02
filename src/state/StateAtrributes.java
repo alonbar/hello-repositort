@@ -1,5 +1,11 @@
 package state;
 
+/**
+ * This enum holds different attributes that are relavent to states and are used throughout the 
+ * program.
+ * @author ALONBA
+ *
+ */
 public enum StateAtrributes {
 
 	isAccepting("isAccepting"),

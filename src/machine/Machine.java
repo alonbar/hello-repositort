@@ -18,6 +18,7 @@ import events.Event;
 import events.eventTypes;
 import state.State;
 import state.ReceivedSates;
+import state.StateAtrributes;
 
 public class Machine {
 	private static String BEGIN_STATE = "q0";
@@ -31,13 +32,11 @@ public class Machine {
 	
 	public void init (String stateBackupFile, String statesTransitionRules) {
 		machineBackup = new File(stateBackupFile);
-	
 		try {
 			//Reading the last state of the machine;
-			fillBuffer(machineBackup);
 			//Reading the transitions of state machine and updating the transitions.
 			transitions = StateFileParser.parse(statesTransitionRules);
-			currentState = transitions.get(BEGIN_STATE);
+			currentState = loadLastState(machineBackup);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
@@ -47,20 +46,26 @@ public class Machine {
 	}
 
 	/**
-	 * This method will read from the events log file into the events buffer for 
+	 * This method will update the current state according to the last run (if there was one) with
+	 * data that was relevant the the last run.
 	 * @param fin file to read events from
 	 * @throws IOException
 	 */
-	private void fillBuffer(File fin) throws IOException {
-		machineBackup.createNewFile();
-		BufferedReader br = new BufferedReader(new FileReader(fin));	 
-		String line = null;
-		while ((line = br.readLine()) != null) {
-			
-		}	
-		br.close();
-		machineBackup.delete();
-		machineBackup.createNewFile();
+	private State loadLastState(File fin) throws IOException {
+		if (machineBackup.exists() == false) {
+			return transitions.get(BEGIN_STATE);
+		} 
+		else {
+			machineBackup.createNewFile();
+			FileInputStream fileInput = new FileInputStream(machineBackup);
+			Properties properties = new Properties();
+			properties.load(fileInput);
+			//get the correct state according to the last run. 
+			currentState = transitions.get(properties.getProperty(StateAtrributes.stateID.toString(), BEGIN_STATE));
+			//update the state with details from the previous run.
+			currentState.updateState(properties);
+			return currentState;
+		}
 	}
 	
 	/**
@@ -139,9 +144,8 @@ public class Machine {
 		
 		Machine m = new Machine();
 
-		m.init("src/resources/fsm_status.properties", "src/resources/states.xml");
+		m.init("src/resources/fsm_status2.properties", "src/resources/states.xml");
 		m.waiting();
-		m.shutDown();
 //		m.updateBackupFile(properties);
 	}
 }
