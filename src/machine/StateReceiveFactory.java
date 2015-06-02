@@ -1,53 +1,59 @@
 package machine;
 
 import java.util.HashMap;
-
-import javax.sound.sampled.ReverbType;
-
 import org.w3c.dom.NamedNodeMap;
-
 import state.ReceivedStateTypes;
 import state.ReceivedSates;
 import state.PrintSate;
 import state.StateAtrributes;
 import state.StatePrintLastXEvent;
 
+/**
+ * This class is all of the received states, which are states that are predefined in the staet XML,
+ * and process them into the correct state object.
+ * When a new state is defined this class should be updated.
+ * @author ALONBA
+ */
 public class StateReceiveFactory {
 	static String TRUE = "true";
-	public static ReceivedSates factory (NamedNodeMap nodeAttributes, HashMap<String,String> map) {
-		String currentNodeType = null;
+	public static ReceivedSates factory (NamedNodeMap stateAttributes, HashMap<String,String> map) {
+		String stateType = null;
 		boolean isAcceptingState = false;
-		if (nodeAttributes.getNamedItem(StateAtrributes.isAccepting.toString()).getNodeValue().equals(TRUE)) {
+		
+		if (stateAttributes.getNamedItem(StateAtrributes.isAccepting.toString()).getNodeValue().equals(TRUE)) {
 			isAcceptingState = true;
 		}
-		if (nodeAttributes.getNamedItem(StateAtrributes.type.toString())  == null) {
-			currentNodeType = ReceivedStateTypes.RegularState.toString();
+		
+		//If the xml does not specify what type is the state, then by default is will be a RegularState
+		if (stateAttributes.getNamedItem(StateAtrributes.type.toString())  == null) {
+			stateType = ReceivedStateTypes.RegularState.toString();
 		}
 		else {
-			currentNodeType = nodeAttributes.getNamedItem(StateAtrributes.type.toString()).getNodeValue();
+			stateType = stateAttributes.getNamedItem(StateAtrributes.type.toString()).getNodeValue();
 		}
-		
-		if (ReceivedStateTypes.StatePrint.compareString(currentNodeType)) { 
+
+		//going over all the defined states to find the correct state to create.
+		if (ReceivedStateTypes.StatePrint.compareString(stateType)) { 
 			return new PrintSate(ReceivedStateTypes.StatePrint,
-								 nodeAttributes.getNamedItem(StateAtrributes.stateID.toString()).getNodeValue(),
+								 stateAttributes.getNamedItem(StateAtrributes.stateID.toString()).getNodeValue(),
 								 map,
-								 nodeAttributes.getNamedItem(StateAtrributes.action.toString()).getNodeValue(),
+								 stateAttributes.getNamedItem(StateAtrributes.action.toString()).getNodeValue(),
 								 isAcceptingState);
 		}
 		
-		else if (ReceivedStateTypes.StatePrintLastXEvents.compareString(currentNodeType)) {
-			int waitForXevents = Integer.parseInt(nodeAttributes.getNamedItem(StateAtrributes.waitForXevents.toString()).getNodeValue());
+		else if (ReceivedStateTypes.StatePrintLastXEvents.compareString(stateType)) {
+			int waitForXevents = Integer.parseInt(stateAttributes.getNamedItem(StateAtrributes.waitForXevents.toString()).getNodeValue());
 			return new StatePrintLastXEvent(ReceivedStateTypes.StatePrintLastXEvents, 
-											nodeAttributes.getNamedItem(StateAtrributes.stateID.toString()).getNodeValue(), 
+											stateAttributes.getNamedItem(StateAtrributes.stateID.toString()).getNodeValue(), 
 											map, 
-											nodeAttributes.getNamedItem(StateAtrributes.action.toString()).getNodeValue(), 
+											stateAttributes.getNamedItem(StateAtrributes.action.toString()).getNodeValue(), 
 											waitForXevents,
 											isAcceptingState);
 		}
 		
-		else if (ReceivedStateTypes.RegularState.compareString(currentNodeType)) {
+		else if (ReceivedStateTypes.RegularState.compareString(stateType)) {
 			return new ReceivedSates(ReceivedStateTypes.RegularState, 
-									 nodeAttributes.getNamedItem(StateAtrributes.stateID.toString()).getNodeValue(), 
+									 stateAttributes.getNamedItem(StateAtrributes.stateID.toString()).getNodeValue(), 
 									 map);
 		}
 		return null;

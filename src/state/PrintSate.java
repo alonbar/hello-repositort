@@ -1,6 +1,7 @@
 package state;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 
 import events.Event;
 import events.eventTypes;
@@ -21,6 +22,12 @@ public class PrintSate extends ReceivedSates {
 	@Override
 	public void action() {
 		System.out.println(this.message);
+	}
+	
+	@Override
+	public void backupState(Properties properties) {
+		properties.setProperty(StateAtrributes.action.toString(), this.message);
+		super.backupState(properties);
 	}
 
 }

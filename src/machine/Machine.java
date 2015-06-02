@@ -1,44 +1,48 @@
 package machine;
-
+/**
+ * This is the machine class. It is the entry point to the program.
+ * The machine will load the information of it's last run and will load the XML that defines the
+ * different transitions and states that are defined.
+ */
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Properties;
 import java.util.Scanner;
-import java.util.Set;
-
 import events.Event;
 import events.eventTypes;
 import state.State;
 import state.ReceivedSates;
 
 public class Machine {
+	private static String BEGIN_STATE = "q0";
 	private State currentState;
-	private StringBuilder eventsBuffer;
 	private boolean isOn;
-	File stateFileLog;
+	//The machineBackup file is where the current state is stored so that if the machine goes down 
+	//and up it will be able to continue from where it left off.
+	File machineBackup;
+	//This map is the heart of the machine. It holds all the states mapped according to their ID.
 	HashMap<String, ReceivedSates> transitions;
 	
-	public Machine () {
-		eventsBuffer = new StringBuilder();
-	}
-	public void init (String stateFilePath, String statePropertyFile) {
-		stateFileLog = new File(stateFilePath);
-		//reading from the events logs and then initializing it.
+	public void init (String stateBackupFile, String statesTransitionRules) {
+		machineBackup = new File(stateBackupFile);
+	
 		try {
-			//creates a new file only if the file doesn't exist
-			fillBuffer(stateFileLog);
-			transitions = StateFileParser.parse(statePropertyFile);
-			currentState = transitions.get("q0");
-			
+			//Reading the last state of the machine;
+			fillBuffer(machineBackup);
+			//Reading the transitions of state machine and updating the transitions.
+			transitions = StateFileParser.parse(statesTransitionRules);
+			currentState = transitions.get(BEGIN_STATE);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
+		
 		this.isOn = true;
 	}
 
@@ -48,18 +52,20 @@ public class Machine {
 	 * @throws IOException
 	 */
 	private void fillBuffer(File fin) throws IOException {
-		stateFileLog.createNewFile();
+		machineBackup.createNewFile();
 		BufferedReader br = new BufferedReader(new FileReader(fin));	 
 		String line = null;
 		while ((line = br.readLine()) != null) {
-			eventsBuffer.append(line);
+			
 		}	
-		System.out.println(eventsBuffer);
 		br.close();
-		stateFileLog.delete();
-		stateFileLog.createNewFile();
+		machineBackup.delete();
+		machineBackup.createNewFile();
 	}
 	
+	/**
+	 * This method will wait for the next coming event and then process it.
+	 */
 	private void waiting () {
 		while (this.isOn) {
 			Event currentEvent = getEvent();
@@ -69,16 +75,34 @@ public class Machine {
 		}
 	}
 	
+	/**
+	 * This method will process the event that the machine just received.
+	 * @param currentEvent
+	 */
 	private void processEvent (Event currentEvent) {
 		if (currentEvent.getEventType().equals(eventTypes.SHUTDOWN)) {
 			shutDown();
 		}
 		else {
+			/*
+			 * Eeach State knows its' logic. The current state will receive the new event and the 
+			 * transitions and will return the next state. 
+			 */
 			currentState = currentState.processEvent(currentEvent, transitions);
+			
+			/*
+			 * Each state knows how to backup it's own unique data; 
+			 */
+			Properties properties = new Properties();
+			currentState.backupState(properties);
+			updateBackupFile(properties);
 			System.out.println("moved to: " + currentState.getStateID());
 		}
 	}
 	
+	/*
+	 * This method might change according to the application that is using this FSM framework. 
+	 */
 	public Event getEvent () {
 		 Scanner in = new Scanner(System.in);
 		 String line = in.nextLine();
@@ -92,15 +116,33 @@ public class Machine {
 	}
 	
 	private void shutDown(){
-		isOn = false;		
+		isOn = false;
+		
+		System.out.println("Shuting down");
+	}
+	
+	public void updateBackupFile (Properties properties) {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(machineBackup);
+			properties.store(fileOut, "fsm status");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
 	public static void main (String [] args) {
 		
 		Machine m = new Machine();
-		m.init("C:\\temp\\alon2.txt", "src/resources/states.xml");
+
+		m.init("src/resources/fsm_status.properties", "src/resources/states.xml");
 		m.waiting();
+		m.shutDown();
+//		m.updateBackupFile(properties);
 	}
 }
 

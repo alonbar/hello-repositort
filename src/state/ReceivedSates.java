@@ -3,13 +3,15 @@ package state;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 
 import events.Event;
 import events.eventTypes;
 
 public class ReceivedSates extends State {
 	
-
+	static String TRUE = "true";
+	static String FALSE = "false";
 	protected HashMap<String, String>  transitionLocalMap;
 	protected boolean isAcceptingState;
 	public ReceivedSates(ReceivedSates other) {
@@ -63,11 +65,28 @@ public class ReceivedSates extends State {
 		String str = currentEvent.getEventType().toString();
 		String nextState = transitionLocalMap.get(str);
 		ReceivedSates retState = transitions.get(nextState);
-		if (retState.isAcceptingState == true) {
+		if (retState.getIsAcceptingState() == true) {
 			retState.action();
-//			retState = transitions.get("q0");
 		}
-		System.out.println("moving to state: " + retState.getStateID());
 		return retState;
-	}       
+	}
+	protected boolean getIsAcceptingState() {
+		return this.isAcceptingState;
+	}
+	@Override
+	public void backupState(Properties properties) {
+		properties.setProperty(StateAtrributes.stateID.toString(), this.stateID);
+		properties.setProperty(StateAtrributes.type.toString(), this.type.toString());
+		String isAcceptingStr = getBooleanInString(this.isAcceptingState);
+		properties.setProperty(StateAtrributes.isAccepting.toString(), isAcceptingStr);			
+
+	}
+	
+	protected String getBooleanInString (boolean flag) {
+		if (flag == true) {
+			return  TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 }
