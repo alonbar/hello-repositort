@@ -33,7 +33,6 @@ public class Machine {
 			//creates a new file only if the file doesn't exist
 			fillBuffer(stateFileLog);
 			transitions = StateFileParser.parse(statePropertyFile);
-			System.out.println("printing transition");
 			currentState = transitions.get("q0");
 			
 		} catch (IOException e) {
@@ -76,6 +75,7 @@ public class Machine {
 		}
 		else {
 			currentState = currentState.processEvent(currentEvent, transitions);
+			System.out.println("moved to: " + currentState.getStateID());
 		}
 	}
 	
@@ -99,7 +99,7 @@ public class Machine {
 	public static void main (String [] args) {
 		
 		Machine m = new Machine();
-		m.init("C:\\temp\\alon2.txt", "C:\\temp\\states.xml");
+		m.init("C:\\temp\\alon2.txt", "src/resources/states.xml");
 		m.waiting();
 	}
 }

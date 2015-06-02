@@ -8,8 +8,8 @@ import events.Event;
 import events.eventTypes;
 
 public class ReceivedSates extends State {
-	protected ReceivedStateTypes type;
-	protected String stateID;
+	
+
 	protected HashMap<String, String>  transitionLocalMap;
 	protected boolean isAcceptingState;
 	public ReceivedSates(ReceivedSates other) {
@@ -65,7 +65,7 @@ public class ReceivedSates extends State {
 		ReceivedSates retState = transitions.get(nextState);
 		if (retState.isAcceptingState == true) {
 			retState.action();
-			retState = transitions.get("q0");
+//			retState = transitions.get("q0");
 		}
 		System.out.println("moving to state: " + retState.getStateID());
 		return retState;

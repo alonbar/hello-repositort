@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<stateMachineProperties>
+	<transitions>
+		<state stateID="q0" isAccepting="false">
+			<event eventType="A" nextState="q1"/>
+			<event eventType="B" nextState="q0"/>
+			<event eventType="C" nextState="q0"/>
+		</state>
+		<state stateID="q1"  isAccepting="false">
+			<event eventType="A" nextState="q3"/>
+			<event eventType="B" nextState="q4"/>
+			<event eventType="C" nextState="q5"/>
+		</state> 
+		<state stateID="q3" isAccepting="false">
+			<event eventType="A" nextState="q0"/>
+			<event eventType="B" nextState="q6"/>
+			<event eventType="C" nextState="q0"/>
+		</state>
+		<state stateID="q4" isAccepting="false">
+			<event eventType="A" nextState="q0"/>
+			<event eventType="B" nextState="q0"/>
+			<event eventType="C" nextState="q9"/>
+		</state>
+		<state stateID="q5"  isAccepting="true" action="Seq3" type="StatePrintLastXEvents" waitForXevents="1">
+			<event eventType="A" nextState="q0"/>
+			<event eventType="B" nextState="q0"/>
+			<event eventType="C" nextState="q0"/>
+		</state> 
+		<state stateID="q6" isAccepting="false">
+			<event eventType="A" nextState="q0"/>
+			<event eventType="B" nextState="q0"/>
+			<event eventType="C" nextState="q7"/>
+		</state>
+		<state stateID="q7" isAccepting="false">
+			<event eventType="A" nextState="q8"/>
+			<event eventType="B" nextState="q0"/>
+			<event eventType="C" nextState="q0"/>
+		</state>
+		<state stateID="q8"  isAccepting="true" action="Seq1" type="StatePrint">
+			<event eventType="A" nextState="q0"/>
+			<event eventType="B" nextState="q0"/>
+			<event eventType="C" nextState="q0"/>
+		</state>
+	</transitions>
+
+</stateMachineProperties>
