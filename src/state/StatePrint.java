@@ -1,10 +1,6 @@
 package state;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
-
-import events.Event;
-import events.eventTypes;
 
 /**
  * This state is an example of how you can expand the fsm without changing any internal logic of 

@@ -1,12 +1,8 @@
 package state;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
-
 import events.Event;
-import events.eventTypes;
 /**
  * This class represent a simple state that can receive an event and decide which is the next 
  * relavent state.

@@ -4,19 +4,14 @@ package machine;
  * The machine will load the information of it's last run and will load the XML that defines the
  * different transitions and states that are defined.
  */
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Scanner;
-
-import javax.swing.DebugGraphics;
-
 import events.Event;
 import events.eventTypes;
 import state.State;
@@ -25,7 +20,6 @@ import state.StateAtrributes;
 
 public class FSM {
 	private static String BEGIN_STATE = "q0";
-	private static String BACKUP_FILE = "src/resources/fsm_status2.properties";
 	private static boolean DEBUG_MODE = false;
 	private State currentState;
 	private boolean isOn;

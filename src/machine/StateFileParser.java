@@ -28,8 +28,6 @@ public class StateFileParser {
 	
 	public static HashMap<String, ReceivedSates> parse (String statesTransitionRules) {
 		HashMap<String, ReceivedSates> transitions = null;
-		ArrayList<ReceivedSates> acceptingStates = null;
-
 		try {
 				File fXmlFile = new File(statesTransitionRules);
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
