@@ -10,7 +10,8 @@ public enum ReceivedStateTypes{
 
 	StatePrint("StatePrint"),
 	StatePrintLastXEvents("StatePrintLastXEvents"),
-	RegularState("RegularState");
+	RegularState("RegularState"),
+	StatePrintSelfLoop("StatePrintSelfLoop");
 
 	private final String stateVal;       
 

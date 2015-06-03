@@ -16,12 +16,12 @@
 			<event eventType="B" nextState="q6"/>
 			<event eventType="C" nextState="q0"/>
 		</state>
-		<state stateID="q4" isAccepting="false">
+		<state stateID="q4" isAccepting="true" type="StatePrintSelfLoop" waitForXevents="3" typeToWaitFor="C" action="Seq3">
 			<event eventType="A" nextState="q0"/>
 			<event eventType="B" nextState="q0"/>
 			<event eventType="C" nextState="q0"/>
 		</state>
-		<state stateID="q5"  isAccepting="true" action="Seq3" type="StatePrintLastXEvents" waitForXevents="2">
+		<state stateID="q5"  isAccepting="true" action="Seq3" type="StatePrintLastXEvents" waitForXevents="1">
 			<event eventType="A" nextState="q0"/>
 			<event eventType="B" nextState="q0"/>
 			<event eventType="C" nextState="q1"/>

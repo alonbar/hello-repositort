@@ -13,6 +13,7 @@ public enum StateAtrributes {
 	type("type"),
 	waitForXevents("waitForXevents"),
 	eventType("eventType"),
+	typeToWaitFor("typeToWaitFor"),
 	nextState("nextState"),
 	stateID("stateID");	
 

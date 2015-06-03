@@ -13,9 +13,9 @@ import events.Event;
  *
  */
 public class StatePrintLastXEvent extends StatePrint {
-	static String EVENTS_BUFFER = "eventsBuffer";
-	static String WAIT_COUNTER = "waitCounter";
-	static String MOVE_ON_FLAG = "moveOnFlag";
+	private static String EVENTS_BUFFER = "eventsBuffer";
+	private static String WAIT_COUNTER = "waitCounter";
+	private static String MOVE_ON_FLAG = "moveOnFlag";
 	private String eventBuffer;
 	private int waitCounter;
 	private int waitForXEvents;
@@ -55,14 +55,11 @@ public class StatePrintLastXEvent extends StatePrint {
 			eventBuffer = eventBuffer + currentEvent.getEventType().toString();
 			if (waitCounter == 0) {
 				this.moveOnFlag = true;
-				String str = currentEvent.getEventType().toString();
-				String nextState = transitionLocalMap.get(str);
-				ReceivedSates retState = transitions.get(nextState);
+				ReceivedSates retState = getNextState(currentEvent, transitions);
 				if (this.isAcceptingState == true) {
 					this.action();
 				}
-				this.waitCounter =this.waitForXEvents;  
-				this.eventBuffer = "";
+				initializedCounter();
 				return retState;
 			}
 			return this;
@@ -76,6 +73,11 @@ public class StatePrintLastXEvent extends StatePrint {
 			return true;
 		}
 		return false;
+	}
+	
+	private void initializedCounter () {
+		this.waitCounter = this.waitForXEvents;  
+		this.eventBuffer = "";
 	}
 	
 	@Override

@@ -74,17 +74,25 @@ public class ReceivedSates extends State {
 	 */
 	@Override
 	public State processEvent(Event currentEvent, HashMap<String, ReceivedSates> transitions) {
-		String str = currentEvent.getEventType().toString();
-		//asking the state what is the appropriate next state according to the event.
-		String nextState = transitionLocalMap.get(str);
-		//Asking the transition table for the next state
-		ReceivedSates retState = transitions.get(nextState);
+		ReceivedSates retState = getNextState(currentEvent, transitions);
 		//If it is an accepting state then executing the state action (if there is one)
 		if (retState.getIsAcceptingState() == true) {
 			retState.action();
 		}
 		return retState;
 	}
+
+	protected ReceivedSates getNextState(Event currentEvent, 
+									   HashMap<String, ReceivedSates> transitions) {
+		String str = currentEvent.getEventType().toString();
+		//asking the state what is the appropriate next state according to the event.
+		String nextState = this.transitionLocalMap.get(str);
+		//Asking the transition table for the next state
+		ReceivedSates retState = transitions.get(nextState);
+		return retState;
+	}
+	
+//	protected State getNextState (State state, HashMap<String, ReceivedSates> transitions)
 	
 	protected boolean getIsAcceptingState() {
 		return this.isAcceptingState;

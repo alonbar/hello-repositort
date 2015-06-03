@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Scanner;
+
+import javax.swing.DebugGraphics;
+
 import events.Event;
 import events.eventTypes;
 import state.State;
@@ -23,6 +26,7 @@ import state.StateAtrributes;
 public class FSM {
 	private static String BEGIN_STATE = "q0";
 	private static String BACKUP_FILE = "src/resources/fsm_status2.properties";
+	private static boolean DEBUG_MODE = false;
 	private State currentState;
 	private boolean isOn;
 	//The machineBackup file is where the current state is stored so that if the machine goes down 
@@ -102,7 +106,10 @@ public class FSM {
 			Properties properties = new Properties();
 			currentState.backupState(properties);
 			updateBackupFile(properties);
-			System.out.println("moved to: " + currentState.getStateID());
+			if (DEBUG_MODE == true)
+			{
+				System.out.println("moved to: " + currentState.getStateID());				
+			}
 		}
 	}
 	
@@ -131,6 +138,7 @@ public class FSM {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(machineBackup);
 			properties.store(fileOut, "fsm status");
+			fileOut.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -146,6 +154,10 @@ public class FSM {
 		{
 			System.out.println("usage: exectionFile backup stateTransitionRules");
 			return;
+		}
+		if (args.length == 3)
+		{
+			DEBUG_MODE = true;
 		}
 		FSM machine = new FSM();
 		machine.init(args[0], args[1]);

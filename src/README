@@ -54,9 +54,9 @@ At any given time the machine holds a current state.
 Upon execution the machine will parse the XML to a map called transitions. the transitions will hold the states defined in the XML, while each state knows it's own rules.
 Thus, when a new event arrives the machine will process the event by letting the current state decide what should be the next state according to the event.
 All state inherit from one abstract class called State.
-There is a class called Received state that represent all states that are defined in the aforementioned XML/
-In light of the given test examples I've defined two states: StatePrint and StatePrintLastXEvents (the second inherits from the first). The states are in charge of implementing 
+There is a class called Received state that represent all states that are defined in the aforementioned XML any definition of other states should be implemented in classes that inherits for ReceviedState class.
+In light of the given test examples I've defined three states: StatePrint StatePrintSelpLoop and StatePrintLastXEvents (the second and third inherits from the first). The states are in charge of implementing 
 the logic described. There is no difference in the interaction of the machine with these states and any other state for that matter.
 In order to make the machine persistent, that machine manages a small backup file in a relative path to it's location. It is the responsibility of each state to "know" how to 
-backup itself into a property file and how to update itself from a proerty file. In that way, we can really benefit from a good state design, a design that take into consideration
+backup itself into a property file and how to update itself from a property file. In that way, we can really benefit from a good state design, a design that take into consideration
 inheritance and etc. 
